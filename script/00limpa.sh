@@ -92,6 +92,11 @@ do
    cdo -s -settaxis,$DATA,00:00:00,1mon -monmean $DIR_OUTPUT/$arquivo $DIR_OUTPUT/MED.MENSAL.$arquivo
 done
 
+# Umidade do solo da NASA/GRACE:
+cdo -s -sellonlatbox,-44.95,-42.54999,-20.45,-18.05 $DIR_INPUT/NASA.GRACE.sfsm.nc $DIR_TMP/tmp01.nc
+cdo -s -remapbil,$DIR_SHAPE/PARNA_SerraCipo.nc $DIR_TMP/tmp01.nc $DIR_TMP/tmp02.nc
+cdo -s -output -fldmean -settaxis,2020-07-06,00:00:00,7days -ifthen $DIR_SHAPE/PARNA_SerraCipo.nc $DIR_TMP/tmp02.nc | sed 's/\./,/g' > $DIR_OUTPUT/serie_temporal_NASA.GRACE.sfms.txt
+
 # Remove arquivos desnecessários.
 rm -f $DIR_TMP/tmp??.nc  $DIR_TMP/eca_???.mes.??.nc $DIR_TMP/mes.??.nc
 rm -f $DIR_TMP/serie_temporal_* $DIR_TMP/tmp??.*.nc
